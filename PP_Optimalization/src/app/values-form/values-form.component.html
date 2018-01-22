@@ -1,0 +1,45 @@
+<div>{{diagnostic}}</div>
+<form #valuesForm="ngForm" class="form-inline">
+  <div class="form-group">
+    <label for="valueA">A</label>
+    <input type="text" class="form-control" id="valueA" name="valueA" [(ngModel)]="model.A" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueB">B</label>
+    <input type="text" class="form-control" id="valueB" name="valueB" [(ngModel)]="model.B" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueC">C</label>
+    <input type="text" class="form-control" id="valueC" name="valueC" [(ngModel)]="model.C" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueD">D</label>
+    <input type="text" class="form-control" id="valueD" name="valueD" [(ngModel)]="model.D" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueE">E</label>
+    <input type="text" class="form-control" id="valueE" name="valueE" [(ngModel)]="model.E" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueX">X</label>
+    <input type="text" class="form-control" id="valueX" name="valueX" [(ngModel)]="model.X" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueN">N</label>
+    <input type="text" class="form-control" id="valueN" name="valueN" [(ngModel)]="model.N" required>
+  </div>
+
+  <div class="form-group">
+    <label for="valueCount">Count</label>
+    <input type="text" class="form-control" id="valueCount" name="valueCount" [(ngModel)]="model.Count" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">Submit</button>
+
+</form>

@@ -1,20 +1,25 @@
 import { Component } from '@angular/core';
+import { Http } from '@angular/http'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
 
     constructor(private _httpService: Http) { }
 
-    apiValues: string[] = [];
+    public data = [];
 
     ngOnInit() {
-        this._httpService.get('/api/values').subscribe(values => {
-            this.apiValues = values.json() as string[];
+        this._httpService.get('/home').subscribe(data => {
+            this.data = data.json()
         });
     }
-    title = 'app';
+
+    public getExamples(event) {
+
+    }
 }
