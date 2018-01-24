@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ValuesData } from './values-data';
-
+import { Equation } from './Equation';
 import { jsEquations } from '../assets/js/external';
 
 @Component({
@@ -14,6 +14,13 @@ export class AppComponent {
     data: any;
     equationsLoaded = false;
     model = new ValuesData(10, 10, 10, 10, 10, 10, 1, 10);
+
+    equation = new Equation();
+    numCallback = (count: number) : void => {
+        alert(this.equation);
+        alert(count.toString());
+    }
+    equation.calculate(this.model.Count, numCallback);
 
     constructor(private _httpService: HttpClient) {
         jsEquations();
