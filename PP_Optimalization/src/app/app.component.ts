@@ -11,7 +11,6 @@ import { jsEquations } from '../assets/js/external';
 })
 
 export class AppComponent {
-    jsEquations: any;
     data: any;
     equationsLoaded = false;
     model = new ValuesData(10, 10, 10, 10, 10, 10, 1, 10);
@@ -31,4 +30,5 @@ export class AppComponent {
     public getExamples(event) {
 
     };
+
 }
