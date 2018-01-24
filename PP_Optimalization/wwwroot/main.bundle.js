@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n<!--<div style=\"text-align:center\">\r\n  <h1>\r\n    Welcome to {{ title }}!\r\n  </h1>\r\n  <img width=\"300\" alt=\"Angular Logo\" src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==\">\r\n</div>\r\n<h2>Here are some links to help you start: </h2>\r\n<ul>\r\n  <li>\r\n    <h2><a target=\"_blank\" rel=\"noopener\" href=\"https://angular.io/tutorial\">Tour of Heroes</a></h2>\r\n  </li>\r\n  <li>\r\n    <h2><a target=\"_blank\" rel=\"noopener\" hreknalepa\\Source\\Reposf=\"https://github.com/angular/angular-cli/wiki\">CLI Documentation</a></h2>\r\n  </li>\r\n  <li>\r\n    <h2><a target=\"_blank\" rel=\"noopener\" href=\"https://blog.angular.io/\">Angular blog</a></h2>\r\n  </li>\r\n</ul>-->\r\n<div class=\"container\">\r\n  <div class=\"jumbotron\">\r\n    <h1>Paradygmaty programowania</h1>\r\n    <h2>Optymalizacja kodu źródłowego – porównanie czasów działania</h2>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n      <app-values-form></app-values-form>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-xs-12\">\r\n      <div class=\"table-responsive\">\r\n        <table class=\"table table-hover table-striped\">\r\n          ...\r\n        </table>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<h1>Application says what?</h1>\r\n<ul>\r\n  <li *ngFor=\"let value of apiValues\">{{value}}\r\n  </li>\r\n</ul>\r\n"
+module.exports = "<div class=\"container\">\r\n  <div class=\"jumbotron\">\r\n    <h1 class=\"display-4\">Paradygmaty programowania</h1>\r\n    <hr class=\"my-4\" />\r\n    <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>\r\n  </div>\r\n\r\n  <app-values-form [model]='model'></app-values-form>\r\n\r\n  <div class=\"row\">\r\n    <div class=\"table-responsive\">\r\n      <table class=\"table table-hover\">\r\n        <thead>\r\n          <tr>\r\n            <th colspan=\"2\" scope=\"col\">Równanie</th>\r\n            <th colspan=\"2\" scope=\"col\">.NET</th>\r\n            <th colspan=\"2\" scope=\"col\">JavaScript</th>\r\n          </tr>\r\n        </thead>\r\n        <tbody *ngIf=\"equationsLoaded\">\r\n          <tr *ngFor=\"let equation of data.EquationsDictionary\">\r\n            <td>\r\n              <!--<p>{{equation.before.formula}}</p>\r\n              <p>{{equation.after.formula}}</p>-->\r\n            </td>\r\n            <td>\r\n\r\n            </td>\r\n            <td>\r\n\r\n            </td>\r\n          </tr>\r\n        </tbody>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -48,7 +48,9 @@ module.exports = "<!--The content below is only a placeholder and can be replace
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__values_data__ = __webpack_require__("../../../../../src/app/values-data.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__assets_js_external__ = __webpack_require__("../../../../../src/assets/js/external.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -60,26 +62,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+
 var AppComponent = /** @class */ (function () {
     function AppComponent(_httpService) {
         this._httpService = _httpService;
-        this.data = [];
+        this.equationsLoaded = false;
+        this.model = new __WEBPACK_IMPORTED_MODULE_2__values_data__["a" /* ValuesData */](10, 10, 10, 10, 10, 10, 1, 10);
+        Object(__WEBPACK_IMPORTED_MODULE_3__assets_js_external__["a" /* jsEquations */])();
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this._httpService.get('/home').subscribe(function (data) {
-            _this.data = data.json();
+        this._httpService.get('/home').subscribe(function (result) {
+            _this.data = result;
+            _this.equationsLoaded = true;
+            console.log(_this.data);
         });
     };
+    ;
     AppComponent.prototype.getExamples = function (event) {
     };
+    ;
     AppComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'app-root',
             template: __webpack_require__("../../../../../src/app/app.component.html"),
             styles: [__webpack_require__("../../../../../src/app/app.component.css")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -97,8 +107,9 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/esm5/forms.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__values_form_values_form_component__ = __webpack_require__("../../../../../src/app/values-form/values-form.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__values_form_values_form_component__ = __webpack_require__("../../../../../src/app/values-form/values-form.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -111,22 +122,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["E" /* NgModule */])({
             declarations: [
-                __WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */],
-                __WEBPACK_IMPORTED_MODULE_5__values_form_values_form_component__["a" /* ValuesFormComponent */]
+                __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */],
+                __WEBPACK_IMPORTED_MODULE_6__values_form_values_form_component__["a" /* ValuesFormComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* HttpModule */]
+                __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */]
             ],
             providers: [],
-            bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
+            bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
         })
     ], AppModule);
     return AppModule;
@@ -180,7 +193,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/values-form/values-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>{{diagnostic}}</div>\r\n<form #valuesForm=\"ngForm\" class=\"form-inline\">\r\n  <div class=\"form-group\">\r\n    <label for=\"valueA\">A</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueA\" name=\"valueA\" [(ngModel)]=\"model.A\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueB\">B</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueB\" name=\"valueB\" [(ngModel)]=\"model.B\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueC\">C</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueC\" name=\"valueC\" [(ngModel)]=\"model.C\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueD\">D</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueD\" name=\"valueD\" [(ngModel)]=\"model.D\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueE\">E</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueE\" name=\"valueE\" [(ngModel)]=\"model.E\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueX\">X</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueX\" name=\"valueX\" [(ngModel)]=\"model.X\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueN\">N</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueN\" name=\"valueN\" [(ngModel)]=\"model.N\" required>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"valueCount\">Count</label>\r\n    <input type=\"text\" class=\"form-control\" id=\"valueCount\" name=\"valueCount\" [(ngModel)]=\"model.Count\" required>\r\n  </div>\r\n\r\n  <button type=\"submit\" class=\"btn btn-success\">Submit</button>\r\n\r\n</form>\r\n"
+module.exports = "<form #valuesForm=\"ngForm\">\r\n  <div class=\"form-row\">\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueA\">A</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueA\" name=\"valueA\" [(ngModel)]=\"model.A\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueB\">B</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueB\" name=\"valueB\" [(ngModel)]=\"model.B\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueC\">C</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueC\" name=\"valueC\" [(ngModel)]=\"model.C\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueD\">D</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueD\" name=\"valueD\" [(ngModel)]=\"model.D\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueE\">E</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueE\" name=\"valueE\" [(ngModel)]=\"model.E\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-2 col-sm-4\">\r\n      <label for=\"valueX\">X</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueX\" name=\"valueX\" [(ngModel)]=\"model.X\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-2 col-sm-4\">\r\n      <label for=\"valueN\">N</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueN\" name=\"valueN\" [(ngModel)]=\"model.N\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-3 col-sm-4\">\r\n      <label for=\"valueCount\">Count</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueCount\" name=\"valueCount\" [(ngModel)]=\"model.Count\" required>\r\n    </div>\r\n  </div>\r\n\r\n  <button type=\"submit\" class=\"btn btn-primary\" (click)='getExamples($event)'>Przelicz</button>\r\n</form>\r\n\r\n\r\n{{getDiagnostic}}\r\n"
 
 /***/ }),
 
@@ -190,7 +203,7 @@ module.exports = "<div>{{diagnostic}}</div>\r\n<form #valuesForm=\"ngForm\" clas
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValuesFormComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__values_data__ = __webpack_require__("../../../../../src/app/values-data.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -203,27 +216,56 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var ValuesFormComponent = /** @class */ (function () {
-    function ValuesFormComponent() {
-        this.model = new __WEBPACK_IMPORTED_MODULE_1__values_data__["a" /* ValuesData */](10, 10, 10, 10, 10, 10, 10000000, 100);
+    function ValuesFormComponent(_httpService) {
+        this._httpService = _httpService;
     }
     ValuesFormComponent.prototype.ngOnInit = function () {
     };
+    ;
+    ValuesFormComponent.prototype.getExamples = function (event) {
+        var _this = this;
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json; charset=utf-8');
+        var body = JSON.stringify(this.model);
+        this._httpService.post("/home", body, {
+            headers: headers
+        }).subscribe(function (result) {
+            _this.data = result;
+            console.log(result);
+        });
+    };
+    ;
     Object.defineProperty(ValuesFormComponent.prototype, "diagnostic", {
-        get: function () { return JSON.stringify(this.model); },
+        get: function () { return JSON.stringify(this.data); },
         enumerable: true,
         configurable: true
     });
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Input */])(),
+        __metadata("design:type", Object)
+    ], ValuesFormComponent.prototype, "model", void 0);
     ValuesFormComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
             selector: 'app-values-form',
             template: __webpack_require__("../../../../../src/app/values-form/values-form.component.html"),
             styles: [__webpack_require__("../../../../../src/app/values-form/values-form.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
     ], ValuesFormComponent);
     return ValuesFormComponent;
 }());
 
+
+
+/***/ }),
+
+/***/ "../../../../../src/assets/js/external.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = jsEquations;
+function jsEquations() {
+    console.log("blabla");
+}
 
 
 /***/ }),

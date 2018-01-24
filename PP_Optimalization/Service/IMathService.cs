@@ -1,6 +1,7 @@
-﻿using org.mariuszgromada.math.mxparser;
+using org.mariuszgromada.math.mxparser;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PP_Optimalization.Service
 {
@@ -42,10 +43,10 @@ namespace PP_Optimalization.Service
 
         private MathData Factory(ValuesData valuesData)
         {
-            var data = new MathData
-            {
-                Equations = EquationsFactory(valuesData)
-            };
+            var data = new MathData();
+
+            var equations = EquationsFactory(valuesData);
+            var dictionary = equations.GroupBy(z => z.Name).ToDictionary(y => y.Key, y => y.ToList());
 
             var values = new List<string>
             {
@@ -60,7 +61,7 @@ namespace PP_Optimalization.Service
             };
 
             data.Values = values;
-
+            data.EquationsDictionary = dictionary;
             return data;
         }
 
@@ -292,14 +293,14 @@ namespace PP_Optimalization.Service
 
             if (type == EquationType.Before)
             {
-                for (int nr1 = 0; nr1 < 100; nr1++)
+                for (int nr1 = 1; nr1 < 100; nr1++)
                     for (int nr2 = 1; nr2 < 100; nr2++)
                         __t1Tab[nr1][nr2] = __t2Tab[nr1][nr2] + _a / nr1 - _c / _d;
             }
             else
             {
                 cd = c / d;
-                for (int nr1 = 0; nr1 < 100; nr1++)
+                for (int nr1 = 1; nr1 < 100; nr1++)
                 {
                     abcd = a / nr1 - cd;
                     for (int nr2 = 1; nr2 < 100; nr2++)
@@ -352,7 +353,6 @@ namespace PP_Optimalization.Service
                 tab[7] = 0;
                 tab[8] = 0;
                 tab[9] = 0;
-                tab[10] = 0;
             }
 
             return 0;
@@ -490,7 +490,7 @@ namespace PP_Optimalization.Service
 
     public class MathData
     {
-        public IList<EquationData> Equations { get; set; }
+        public Dictionary<string, List<EquationData>> EquationsDictionary { get; set; }
         public IList<string> Values { get; set; }
     }
 
@@ -504,15 +504,17 @@ namespace PP_Optimalization.Service
         public EquationData(int id, string name)
         {
             Id = id;
+            Name = name;
         }
     }
 
     public class Equation
     {
-        private string Formula { get; set; }
-        private List<string> Values { get; set; }
-        private double Result { get; set; }
-        private long TimeTaken { get; set; }
+        public string Formula { get; set; }
+        public List<string> Values { get; set; }
+        public double Result { get; set; }
+        public long NetTimeTaken { get; set; }
+        public long JSTimeTaken { get; set; }
         public Func<double, double> Func { get; set; }
 
         public Equation(string formula, int count, Func<double, float> func)
@@ -535,7 +537,7 @@ namespace PP_Optimalization.Service
                 Result = func(count);
             }
             watch.Stop();
-            TimeTaken = watch.ElapsedMilliseconds;
+            NetTimeTaken = watch.ElapsedMilliseconds;
         }
 
         private void Calculate(int count, Func<double, float> func)
@@ -546,7 +548,7 @@ namespace PP_Optimalization.Service
                 Result = func(count);
             }
             watch.Stop();
-            TimeTaken = watch.ElapsedMilliseconds;
+            NetTimeTaken = watch.ElapsedMilliseconds;
         }
     }
 
