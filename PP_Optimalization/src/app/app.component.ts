@@ -16,6 +16,11 @@ export class AppComponent {
     jsEquations;
     model = new ValuesData(7, 2, 3, 4, 5, 10, 100, 10);
 
+    reloadModel(event, data: any): void {
+        this.data = data;
+        console.log(data);
+    }
+
     _aTab = Array.apply(null, Array(100)).map(function () { });
     _bTab = Array.apply(null, Array(100)).map(function () { });
     _xTab = Array.apply(null, Array(100)).map(function () { });
@@ -63,8 +68,8 @@ export class AppComponent {
 
             this.remapPositions();
 
-            console.log("AFTER");
-            console.log(this.data);
+            //console.log("AFTER");
+            //console.log(this.data);
         });
 
         //console.log("constructor");
@@ -306,7 +311,7 @@ export class AppComponent {
         if (type == "before") {
             let t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
-                result = -model.A + model.B;
+                result = - model.A + model.B;
             }
             let t1 = performance.now();
             timetaken = t1 - t0;
@@ -411,9 +416,9 @@ export class AppComponent {
         else {
             let t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
-                model.A = model.A + model.A;
-                model.A = model.A + model.A;
-                result = model.A;
+                let a = model.A + model.A;
+                a += model.A + model.A;
+                result = a;
             }
             let t1 = performance.now();
             timetaken = t1 - t0;

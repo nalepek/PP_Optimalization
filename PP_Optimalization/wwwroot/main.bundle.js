@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n  <div class=\"jumbotron\">\r\n    <h1 class=\"display-4\">Paradygmaty programowania</h1>\r\n    <hr class=\"my-4\" />\r\n    <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>\r\n  </div>\r\n\r\n  <app-values-form [model]='model'></app-values-form>\r\n\r\n  <div class=\"row\">\r\n    <div class=\"table-responsive\">\r\n      <table class=\"table table-hover\">\r\n        <thead>\r\n          <tr>\r\n            <th colspan=\"2\" scope=\"col\">Równanie</th>\r\n            <th colspan=\"2\" scope=\"col\">.NET</th>\r\n            <th colspan=\"2\" scope=\"col\">JavaScript</th>\r\n          </tr>\r\n        </thead>\r\n        <ng-container *ngIf=\"equationsLoaded\">\r\n          <tbody *ngFor=\"let equationGroup of data.equationsDictionary | keys\">\r\n            <tr>\r\n              <td colspan=\"6\">\r\n                <h3>\r\n                    {{equationGroup.key}}\r\n                </h3>\r\n              </td>\r\n            </tr>\r\n            <tr *ngFor=\"let equation of equationGroup.value\">\r\n              <td>{{equation.before.formula}}</td>\r\n              <td>{{equation.after.formula}}</td>\r\n              <td>{{equation.before.netTimeTaken}}</td>\r\n              <td>{{equation.after.netTimeTaken}}</td>\r\n              <td>{{equation.before.jsTimeTaken}}</td>\r\n              <td>{{equation.after.jsTimeTaken}}</td>\r\n            </tr>\r\n            <!--<tr *ngFor=\"let equation of equationGroup | values\">\r\n              <td>\r\n                <!--<p>\r\n                  {{equation}}\r\n                </p>-->\r\n            <!--<p>{{key.before.formula}}</p>\r\n                <p>{{key.after.formula}}</p>\r\n              </td>\r\n              <td></td>\r\n              <td></td>\r\n              <td></td>\r\n            </tr>-->\r\n          </tbody>\r\n        </ng-container>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"container\">\r\n  <div class=\"jumbotron\">\r\n    <h1 class=\"display-4\">Paradygmaty programowania</h1>\r\n    <hr class=\"my-4\" />\r\n    <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>\r\n  </div>\r\n\r\n  <app-values-form [model]='model'></app-values-form>\r\n\r\n  <div class=\"row\" (onModelChanged)=\"reloadModel($event)\">\r\n    <div class=\"table-responsive\">\r\n      <table class=\"table table-hover\">\r\n        <thead>\r\n          <tr>\r\n            <th colspan=\"2\" scope=\"col\">Równanie</th>\r\n            <th colspan=\"2\" scope=\"col\">.NET</th>\r\n            <th colspan=\"2\" scope=\"col\">JavaScript</th>\r\n          </tr>\r\n        </thead>\r\n        <ng-container *ngIf=\"equationsLoaded\">\r\n          <tbody *ngFor=\"let equationGroup of data.equationsDictionary | keys\">\r\n            <tr>\r\n              <td colspan=\"6\">\r\n                <h3>\r\n                    {{equationGroup.key}}\r\n                </h3>\r\n              </td>\r\n            </tr>\r\n            <tr *ngFor=\"let equation of equationGroup.value\">\r\n              <td>{{equation.before.formula}}</td>\r\n              <td>{{equation.after.formula}}</td>\r\n              <td>{{equation.before.netTimeTaken}}</td>\r\n              <td>{{equation.after.netTimeTaken}}</td>\r\n              <td>{{equation.before.jsTimeTaken}}</td>\r\n              <td>{{equation.after.jsTimeTaken}}</td>\r\n            </tr>\r\n            <!--<tr *ngFor=\"let equation of equationGroup | values\">\r\n              <td>\r\n                <!--<p>\r\n                  {{equation}}\r\n                </p>-->\r\n            <!--<p>{{key.before.formula}}</p>\r\n                <p>{{key.after.formula}}</p>\r\n              </td>\r\n              <td></td>\r\n              <td></td>\r\n              <td></td>\r\n            </tr>-->\r\n          </tbody>\r\n        </ng-container>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -107,11 +107,15 @@ var AppComponent = /** @class */ (function () {
             _this.equationsLoaded = true;
             //console.log(this.data);
             _this.remapPositions();
-            console.log("AFTER");
-            console.log(_this.data);
+            //console.log("AFTER");
+            //console.log(this.data);
         });
         //console.log("constructor");
     }
+    AppComponent.prototype.reloadModel = function (event, data) {
+        this.data = data;
+        console.log(data);
+    };
     AppComponent.prototype.ngOnInit = function () {
         //console.log("ngOnInit");
     };
@@ -433,9 +437,9 @@ var AppComponent = /** @class */ (function () {
         else {
             var t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
-                model.A = model.A + model.A;
-                model.A = model.A + model.A;
-                result = model.A;
+                var a = model.A + model.A;
+                a += model.A + model.A;
+                result = a;
             }
             var t1 = performance.now();
             timetaken = t1 - t0;
@@ -1004,9 +1008,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var ValuesFormComponent = /** @class */ (function () {
     function ValuesFormComponent(_httpService) {
         this._httpService = _httpService;
+        this.onModelChanged = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* EventEmitter */]();
     }
     ValuesFormComponent.prototype.ngOnInit = function () {
     };
@@ -1017,17 +1023,19 @@ var ValuesFormComponent = /** @class */ (function () {
         var body = JSON.stringify(this.model);
         this._httpService.post("/home", body, {
             headers: headers
-        }).subscribe(function (result) {
+        })
+            .subscribe(function (result) {
+            _this.onModelChanged.emit(result);
             _this.data = result;
             console.log(result);
+        }, function (error) {
+            console.log(error);
         });
     };
-    ;
-    Object.defineProperty(ValuesFormComponent.prototype, "diagnostic", {
-        get: function () { return JSON.stringify(this.data); },
-        enumerable: true,
-        configurable: true
-    });
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["K" /* Output */])(),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* EventEmitter */])
+    ], ValuesFormComponent.prototype, "onModelChanged", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Input */])(),
         __metadata("design:type", Object)

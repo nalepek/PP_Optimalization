@@ -7,7 +7,7 @@
 
   <app-values-form [model]='model'></app-values-form>
 
-  <div class="row">
+  <div class="row" (onModelChanged)="reloadModel($event)">
     <div class="table-responsive">
       <table class="table table-hover">
         <thead>

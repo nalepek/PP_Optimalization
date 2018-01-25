@@ -25,7 +25,7 @@ namespace PP_Optimalization.Controllers
         D = 10,
         E = 10,
         X = 10,
-        Count = 1,
+        Count = 100,
         N = 10
       };
       var data = _mathService.GetExamples(valuesData);

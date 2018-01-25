@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { ValuesData } from '../values-data';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'app-values-form',
@@ -9,6 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ValuesFormComponent implements OnInit {
 
+    @Output() onModelChanged: EventEmitter<any> = new EventEmitter<any>();
     @Input() model: any;
 
     public data: any;
@@ -27,11 +29,15 @@ export class ValuesFormComponent implements OnInit {
 
         this._httpService.post("/home", body, {
             headers: headers
-        }).subscribe(result => {
-            this.data = result;
-            console.log(result);
-        });
-    };
-
-    get diagnostic() { return JSON.stringify(this.data); }
+        })
+            .subscribe(result => {
+                this.onModelChanged.emit(result);
+                this.data = result;
+                console.log(result);
+            },
+            error => {
+                console.log(error);
+            }
+            );
+    }
 }
