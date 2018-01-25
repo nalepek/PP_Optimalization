@@ -17,20 +17,37 @@
             <th colspan="2" scope="col">JavaScript</th>
           </tr>
         </thead>
-        <tbody *ngIf="equationsLoaded">
-          <tr *ngFor="let equation of data.EquationsDictionary">
-            <td>
-              <!--<p>{{equation.before.formula}}</p>
-              <p>{{equation.after.formula}}</p>-->
-            </td>
-            <td>
-
-            </td>
-            <td>
-
-            </td>
-          </tr>
-        </tbody>
+        <ng-container *ngIf="equationsLoaded">
+          <tbody *ngFor="let equationGroup of data.equationsDictionary | keys">
+            <tr>
+              <td colspan="6">
+                <h3>
+                    {{equationGroup.key}}
+                </h3>
+              </td>
+            </tr>
+            <tr *ngFor="let equation of equationGroup.value">
+              <td>{{equation.before.formula}}</td>
+              <td>{{equation.after.formula}}</td>
+              <td>{{equation.before.netTimeTaken}}</td>
+              <td>{{equation.after.netTimeTaken}}</td>
+              <td>{{equation.before.jsTimeTaken}}</td>
+              <td>{{equation.after.jsTimeTaken}}</td>
+            </tr>
+            <!--<tr *ngFor="let equation of equationGroup | values">
+              <td>
+                <!--<p>
+                  {{equation}}
+                </p>-->
+            <!--<p>{{key.before.formula}}</p>
+                <p>{{key.after.formula}}</p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>-->
+          </tbody>
+        </ng-container>
       </table>
     </div>
   </div>

@@ -6,11 +6,15 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { ValuesFormComponent } from './values-form/values-form.component';
+import { KeysPipe } from './keys.pipe';
+import { ValuesPipe } from './values.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ValuesFormComponent
+    ValuesFormComponent,
+    KeysPipe,
+    ValuesPipe
   ],
   imports: [
       BrowserModule,

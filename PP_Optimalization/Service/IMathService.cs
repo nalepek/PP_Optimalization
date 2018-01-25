@@ -96,7 +96,7 @@ namespace PP_Optimalization.Service
 
                 new EquationData(i++, "Optymalizacja lokalna")
                 {
-                    Before = new Equation("- a + b", v.Count, z => - v.A + v.B),
+                    Before = new Equation("-a + b", v.Count, z => -v.A + v.B),
                     After = new Equation("b - a", v.Count, z => v.B - v.A)
                 },
 
@@ -130,16 +130,16 @@ namespace PP_Optimalization.Service
                     After = new Equation("a * 0.5", v.Count, z => v.A * 0.5)
                 },
 
-                new EquationData(i++, "Stosowanie oszczedniejszych operacji")
+                new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
                     Before = new Equation(String.Concat("y = c / x ", Environment.NewLine, "z = a + b / x") , v.Count, z => EconomicalOperation2(v.A, v.B, v.C, v.X, EquationType.Before)),
                     After = new Equation(String.Concat("xOdwr = 1.0 / x ", Environment.NewLine, "y = c * xOdwr", Environment.NewLine, "z = a + b * xOdwr"), v.Count, z => EconomicalOperation2(v.A, v.B, v.C, v.X, EquationType.After))
                 },
 
-                new EquationData(i++, "Wyliczanie wartosci stałych")
+                new EquationData(i++, "Wyliczanie wartości stałych")
                 {
-                    Before = new Equation("b = 4 * a * atan(1) / 180 + c" , v.Count, z => v.B = 4 * v.A * Math.Atan(1) / 180 + v.C),
-                    After = new Equation("b = a * 0.017453292519943295 + c", v.Count, z => v.B = v.A * 0.017453292519943295 + v.C)
+                    Before = new Equation("b = 4 * a * atan(1) / 180 + c" , v.Count, z => 4 * v.A * Math.Atan(1) / 180 + v.C),
+                    After = new Equation("b = a * 0.017453292519943295 + c", v.Count, z => v.A * 0.017453292519943295 + v.C)
                 },
 
                 new EquationData(i++, "Stosowanie efektywniejszych instrukcji")
@@ -157,7 +157,7 @@ namespace PP_Optimalization.Service
                 new EquationData(i++, "Eliminacja obliczen redundantnych")
                 {
                     Before = new Equation(String.Concat("y = x + a / b * c", Environment.NewLine, "z = e + a / b * c") , v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.Before)),
-                    After = new Equation(String.Concat("abc = a / b * c", Environment.NewLine, "y = a + abc", Environment.NewLine, "z = e + abc"), v.Count, z => v.A * 0.5)
+                    After = new Equation(String.Concat("abc = a / b * c", Environment.NewLine, "y = a + abc", Environment.NewLine, "z = e + abc"), v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.After))
                 },
 
                 new EquationData(i++, "Konwersja typów")
