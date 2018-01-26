@@ -79,6 +79,8 @@ export class AppComponent {
                 this.equationsLoaded = true;
                 this.isLoading = false;
 
+                this.getModel();
+
                 let t0 = performance.now();
                 this.jsEquations = this.getEquations(this.model);
                 let t1 = performance.now();
@@ -107,6 +109,19 @@ export class AppComponent {
 
     ngOnInit() {
     };
+
+    getModel (){
+        this.model.A = this.data.values.a;
+        this.model.B = this.data.values.b;
+        this.model.C = this.data.values.c;
+        this.model.D = this.data.values.d;
+        this.model.E = this.data.values.e;
+        this.model.N = this.data.values.n;
+        this.model.X = this.data.values.x;
+        this.model.Count = this.data.values.count;
+        this.model.W = this.data.values.w;
+
+    }
 
     public getExamples(event) {
         this.jsLoading = true;

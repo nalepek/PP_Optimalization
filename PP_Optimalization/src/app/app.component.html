@@ -21,6 +21,7 @@
         <h1 class="display-4">Paradygmaty programowania</h1>
         <hr class="my-4" />
         <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>
+        <p style="float: right">Kamil Nalepa, Sławomir Czaja</p>
     </div>
     <form #valuesForm="ngForm">
         <div class="form-row">
@@ -96,8 +97,8 @@
                             </td>
                         </tr>
                         <tr *ngFor="let equation of equationGroup.value">
-                            <td style="white-space: pre-wrap;">{{equation.before.formula}}</td>
-                            <td style="white-space: pre-wrap;">{{equation.after.formula}}</td>
+                            <td style="white-space: pre-wrap;" placement="top" ngbTooltip="{{equation.before.valuesFormula}}" container="body">{{equation.before.formula}}</td>
+                            <td style="white-space: pre-wrap;" placement="top" ngbTooltip="{{equation.after.valuesFormula}}" container="body">{{equation.after.formula}}</td>
                             <td placement="top" ngbTooltip="{{equation.before.netTimeTaken}}" container="body">{{equation.before.netTimeTakenFixed}}</td>
                             <td placement="top" ngbTooltip="{{equation.after.netTimeTaken}}" container="body">{{equation.after.netTimeTakenFixed}}</td>
                             <td placement="top" ngbTooltip="{{equation.before.jsTimeTaken}}" container="body">{{equation.before.jsTimeTakenFixed}}</td>

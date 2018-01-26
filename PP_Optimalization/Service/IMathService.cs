@@ -29,9 +29,12 @@ namespace PP_Optimalization.Service
         private int _c;
         private int _d;
 
+        private ValuesData _valuesData;
+
         public MathService()
         {
-            for (var i = 0; i < 50; i++){
+            for (var i = 0; i < 50; i++)
+            {
                 tab[i] = i;
             }
             for (var i = 0; i < 100; i++)
@@ -55,6 +58,8 @@ namespace PP_Optimalization.Service
                     __t2Tab[i][j] = j;
                 }
             }
+
+            _valuesData = new ValuesData();
         }
 
         public MathData GetExamples(ValuesData valuesData)
@@ -69,6 +74,8 @@ namespace PP_Optimalization.Service
         private MathData Factory(ValuesData valuesData)
         {
             var data = new MathData();
+
+            _valuesData = valuesData;
 
             var equations = EquationsFactory(valuesData);
             var dictionary = equations.GroupBy(z => z.Name).ToDictionary(y => y.Key, y => y.ToList());
@@ -85,7 +92,7 @@ namespace PP_Optimalization.Service
                 "count = " + valuesData.Count
             };
 
-            data.Values = values;
+            data.Values = valuesData;
             data.EquationsDictionary = dictionary;
             return data;
         }
@@ -97,92 +104,92 @@ namespace PP_Optimalization.Service
             {
                 new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
-                    Before = new Equation("Math.Pow(x, 2) / b - a * x / b", v.Count, z => Math.Pow(v.X, 2) / v.B - v.A * v.X / v.B),
-                    After = new Equation("(x * x - x * a) / b", v.Count, z => (v.X * v.X - v.X * v.A) / v.B)
+                    Before = MinimizeOperationNumber(v, EquationType.Before),
+                    After = MinimizeOperationNumber(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
-                    Before = new Equation("Math.Pow(x, 2) / b - a * x / b", v.Count, z => Math.Pow(v.X, 2) / v.B - v.A * v.X / v.B),
-                    After = new Equation("x * (x - a) / b", v.Count, z => v.X * (v.X - v.A) / v.B)
+                    Before = MinimizeOperationNumber(v, EquationType.Before),
+                    After = MinimizeOperationNumber(v, EquationType.AfterAnother)
                 },
 
                 new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
-                    Before = new Equation("a * b * c + a * b * d + a * e", v.Count, z => v.A * v.B * v.C + v.A * v.B * v.D + v.A * v.E),
-                    After = new Equation("a * (b * (c + d) + e)", v.Count, z => v.A * (v.B * (v.C + v.D) + v.E))
+                    Before = MinimizeOperationNumber2(v, EquationType.Before),
+                    After = MinimizeOperationNumber2(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
-                    Before = new Equation("a[n] * x * n + a[n - 1] * x *(n - 1)+ ... + a[1] * x + a[0]", v.Count, z => Series(v.N, v.X, EquationType.Before)),
-                    After = new Equation("...((a[n] * x + a[n - 1]) * x + a[n - 2] * x + ... + a[1]) * x + a[0]", v.Count, z => Series(v.N, v.X, EquationType.After))
+                    Before = MinimizeOperationNumber3(v, EquationType.Before),
+                    After = MinimizeOperationNumber3(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
-                    Before = new Equation("-a + b", v.Count, z => -v.A + v.B),
-                    After = new Equation("b - a", v.Count, z => v.B - v.A)
+                    Before = MinimizeOperationNumber4(v, EquationType.Before),
+                    After = MinimizeOperationNumber4(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Likwidacja zmiennych z jednokrotnym odwołaniem")
                 {
-                    Before = new Equation("d = a + b * c \ny = d + e" , v.Count, z => ReductionOfVarWithSingleRef(v.A, v.B, v.C, v.E)),
-                    After = new Equation("y = a + b * c + e", v.Count, z => v.A + v.B * v.C + v.E)
+                    Before = ReductionOfSingleRef(v, EquationType.Before),
+                    After = ReductionOfSingleRef(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
-                    Before = new Equation("2 * a" , v.Count, z => 2 * v.A),
-                    After = new Equation("a + a", v.Count, z => v.A + v.A)
+                    Before = MoreEconomicOperations(v, EquationType.Before),
+                    After = MoreEconomicOperations(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
-                    Before = new Equation("3 * a" , v.Count, z => 3 * v.A),
-                    After = new Equation("a + a + a", v.Count, z => v.A + v.A + v.A)
+                    Before = MoreEconomicOperations2(v, EquationType.Before),
+                    After = MoreEconomicOperations2(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
-                    Before = new Equation("4 * a" , v.Count, z => 4 * v.A),
-                    After = new Equation(String.Concat("a = a + a ", Environment.NewLine, "a = a + a"), v.Count, z => EconomicalOperation1(v.A))
+                    Before = MoreEconomicOperations3(v, EquationType.Before),
+                    After = MoreEconomicOperations3(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
-                    Before = new Equation("a / 2" , v.Count, z => v.A / 2),
-                    After = new Equation("a * 0.5", v.Count, z => v.A * 0.5)
+                    Before = MoreEconomicOperations4(v, EquationType.Before),
+                    After = MoreEconomicOperations4(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
-                    Before = new Equation(String.Concat("y = c / x ", Environment.NewLine, "z = a + b / x") , v.Count, z => EconomicalOperation2(v.A, v.B, v.C, v.X, EquationType.Before)),
-                    After = new Equation(String.Concat("xOdwr = 1.0 / x ", Environment.NewLine, "y = c * xOdwr", Environment.NewLine, "z = a + b * xOdwr"), v.Count, z => EconomicalOperation2(v.A, v.B, v.C, v.X, EquationType.After))
+                    Before = MoreEconomicOperations5(v, EquationType.Before),
+                    After = MoreEconomicOperations5(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Wyliczanie wartości stałych")
                 {
-                    Before = new Equation("b = 4 * a * atan(1) / 180 + c" , v.Count, z => 4 * v.A * Math.Atan(1) / 180 + v.C),
-                    After = new Equation("b = a * 0.017453292519943295 + c", v.Count, z => v.A * 0.017453292519943295 + v.C)
+                    Before = Constants(v, EquationType.Before),
+                    After = Constants(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie efektywniejszych instrukcji")
                 {
-                    Before = new Equation(String.Concat("a = 0 ", Environment.NewLine, "for(int nr = 0; nr < 50; nr++) {", Environment.NewLine, "if(tab[nr] < a) a = tab[nr];", Environment.NewLine, "}") , v.Count, z => EfficientInstructions(EquationType.Before)),
-                    After = new Equation(String.Concat("a = 0;", Environment.NewLine, "for (int nr = 0; nr < 50; nr++) { ", Environment.NewLine, "x = tab[nr];", Environment.NewLine, "if (x < a) a = x;", Environment.NewLine, "}"), v.Count, z => EfficientInstructions(EquationType.After))
+                    Before = MoreEfficientOperations(v, EquationType.Before),
+                    After = MoreEfficientOperations(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Stosowanie efektywniejszych instrukcji")
                 {
-                    Before = new Equation(String.Concat("a = 0 ", Environment.NewLine, "for(int nr = 0; nr < 50; nr++) {", Environment.NewLine, "if(tab[nr] < a) a = tab[nr];", Environment.NewLine, "}") , v.Count, z => EfficientInstructions(EquationType.Before)),
-                    After = new Equation(String.Concat("a = 0;", Environment.NewLine, "for (int nr = 0; nr < 50; nr++) { ", Environment.NewLine, "x = tab[nr];", Environment.NewLine, "a = x < a ? x : a;", Environment.NewLine, "}"), v.Count, z => EfficientInstructions(EquationType.AfterAnother))
+                    Before = new Equation("a = 0 \nfor(int nr = 0; nr < 50; nr++) { \nif(tab[nr] < a) a = tab[nr]; \n}" , v.Count, z => EfficientInstructions(EquationType.Before)),
+                    After = new Equation("a = 0; \nfor (int nr = 0; nr < 50; nr++) { \nx = tab[nr]; \na = x < a ? x : a; \n}", v.Count, z => EfficientInstructions(EquationType.AfterAnother))
                 },
 
                 new EquationData(i++, "Eliminacja obliczeń redundantnych")
                 {
-                    Before = new Equation(String.Concat("y = x + a / b * c", Environment.NewLine, "z = e + a / b * c") , v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.Before)),
-                    After = new Equation(String.Concat("abc = a / b * c", Environment.NewLine, "y = a + abc", Environment.NewLine, "z = e + abc"), v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.After))
+                    Before = EliminationRedundantCalcs(v, EquationType.Before),
+                    After = EliminationRedundantCalcs(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Konwersja typów")
@@ -193,31 +200,24 @@ namespace PP_Optimalization.Service
 
                 new EquationData(i++, "Optymalizacja globalna: Rozwijanie pętli")
                 {
-                    Before = new Equation(String.Concat("for (int nr = 0; nr < 10; nr++) ", Environment.NewLine, "tab1[nr] = 0;") , v.Count, z => ExpandLoop(EquationType.Before)),
-                    After = new Equation(String.Concat("tab[0] = 0", Environment.NewLine, "... tab[10] = 10"), v.Count, z => ExpandLoop(EquationType.After))
+                    Before = new Equation("for (int nr = 0; nr < 10; nr++) \ntab1[nr] = 0;" , v.Count, z => ExpandLoop(EquationType.Before)),
+                    After = new Equation("tab[0] = 0 \n... tab[10] = 10", v.Count, z => ExpandLoop(EquationType.After))
                 },
 
                 new EquationData(i++, "Łączenie pętli")
                 {
-                    Before = new Equation(String.Concat("for(int nr=0; nr<100; nr++)", Environment.NewLine, "tab1[nr]=0;",
-                                                        Environment.NewLine, "for (int nr = 0; nr < 100; nr++)", Environment.NewLine,
-                                                        "tab2[nr]=0;") , v.Count, z => JoinLoop(EquationType.Before)),
-                    After = new Equation(String.Concat("for(int nr=0; nr<100; nr++){", Environment.NewLine, "tab1[nr]=0;",
-                                                       Environment.NewLine, "tab2[nr]=1; }"),
+                    Before = new Equation(@"for(int nr=0; nr<100; nr++) \ntab1[nr]=0; 
+                                                        \nfor (int nr = 0; nr < 100; nr++) 
+                                                        \ntab2[nr]=0;", v.Count, z => JoinLoop(EquationType.Before)),
+                    After = new Equation(@"for(int nr=0; nr<100; nr++){ \ntab1[nr]=0;
+                                                       \ntab2[nr]=1; }",
                                             v.Count, z => JoinLoop(EquationType.After))
                 },
 
                 new EquationData(i++, "Przenoszenie operacji niezmienniczych w pętli poza pętle (w tym konwersji typów)")
                 {
-                    Before = new Equation(String.Concat("for(int nr1=0; nr1<100; nr1++)", Environment.NewLine,
-                                                            "for (int nr2 = 1; nr2 < 100; nr2++)", Environment.NewLine,
-                                                                "t1[nr1][nr2] = t2[nr1][nr2] + a / nr1 - c / d;"), v.Count, z => MoveUnusedOutOfLoop(v.A, v.C, v.D, EquationType.Before)),
-                    After = new Equation(String.Concat("cd=c/d;", Environment.NewLine,
-                                                       "for(int nr1=0; nr1<100; nr1++){", Environment.NewLine,
-                                                       "abcd=a/nr1-cd;", Environment.NewLine,
-                                                       "for(int nr2=1; nr2<100; nr2++)", Environment.NewLine,
-                                                       "t1[nr1][nr2]=t2[nr1][nr2]+abcd; }"),
-                                         v.Count, z => MoveUnusedOutOfLoop(v.A, v.C, v.D, EquationType.After))
+                    Before = MoveUnusedOutOfLoopEquation(v, EquationType.Before),
+                    After = MoveUnusedOutOfLoopEquation(v, EquationType.After)
                 },
 
                 new EquationData(i++, "Przenoszenie testowania poza pętle")
@@ -255,6 +255,310 @@ namespace PP_Optimalization.Service
             return list;
         }
 
+        private Equation MinimizeOperationNumber(ValuesData v, EquationType type)
+        {
+
+            if (type == EquationType.Before)
+            {
+                var formula = "Math.Pow(x, 2) / b - a * x / b";
+                var numberFormula = string.Format("Math.Pow({0}, 2) / {1} - {2} * {0} / {1}", v.X, v.B, v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => Math.Pow(v.X, 2) / v.B - v.A * v.X / v.B);
+            }
+            else if (type == EquationType.After)
+            {
+
+                var formula = "(x * x - x * a) / b";
+                var numberFormula = string.Format("({0} * {0} - {0} * {2}) / {1}", v.X, v.B, v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => (v.X * v.X - v.X * v.A) / v.B);
+            }
+            else
+            {
+                var formula = "x * (x - a) / b";
+                var numberFormula = string.Format("{0} * ({0} - {1}) / {2}", v.X, v.A, v.B);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.X * (v.X - v.A) / v.B);
+            }
+        }
+
+        private Equation MinimizeOperationNumber2(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "a * b * c + a * b * d + a * e";
+                var numberFormula = string.Format("{0} * {1} * {2} + {0} * {1} * {3} + {0} * {4}", v.A, v.B, v.C, v.D, v.E);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A * v.B * v.C + v.A * v.B * v.D + v.A * v.E);      
+            }
+            else
+            {
+                var formula = "a * (b * (c + d) + e)";
+                var numberFormula = string.Format("{0} * ({1} * ({2} + {3}) + {4})", v.A, v.B, v.C, v.D, v.E);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A * (v.B * (v.C + v.D) + v.E));
+            }
+        }
+
+        private Equation MinimizeOperationNumber3(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "a[n] * x * n + a[n - 1] * x *(n - 1)+ ... + a[1] * x + a[0]";
+                var numberFormula = string.Format("a[n] * {0} * {1} + a[n - 1] * {0} *(n - 1)+ ... + a[1] * {0} + a[0]", v.X, v.N);
+
+                return new Equation(formula, numberFormula, v.Count, z => Series(v.N, v.X, EquationType.Before));
+            }
+            else
+            {
+                var formula = "...((a[n] * x + a[n - 1]) * x + a[n - 2] * x + ... + a[1]) * x + a[0]";
+                var numberFormula = string.Format("...((a[n] * {0} + a[n - 1]) * {0} + a[n - 2] * {0} + ... + a[1]) * {0} + a[0]", v.X);
+
+                return new Equation(formula, numberFormula, v.Count, z => Series(v.N, v.X, EquationType.After));
+            }
+        }
+
+        private Equation MinimizeOperationNumber4(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "-a + b";
+                var numberFormula = string.Format("-{0} + {1}", v.A, v.B);
+
+                return new Equation(formula, numberFormula, v.Count, z => -v.A + v.B);
+            }
+            else
+            {
+                var formula = "b - a";
+                var numberFormula = string.Format("{0} - {1}", v.A, v.B);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.B - v.A);
+            }
+        }
+
+        private Equation ReductionOfSingleRef(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "d = a + b * c \ny = d + e";
+                var numberFormula = string.Format("d = {0} + {1} * {2} \ny = {3} + {4}", v.A, v.B, v.C, v.D, v.E);
+
+                return new Equation(formula, numberFormula, v.Count, z => ReductionOfVarWithSingleRef(v.A, v.B, v.C, v.E));
+            }
+            else
+            {
+                var formula = "y = a + b * c + e";
+                var numberFormula = string.Format("y = {0} + {1} * {2} + {3}", v.A, v.B, v.C, v.E);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A + v.B * v.C + v.E);
+            }
+        }
+
+        private Equation MoreEconomicOperations(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "2 * a";
+                var numberFormula = string.Format("2 * {0}", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => 2 * v.A);
+            }
+            else
+            {
+                var formula = "a + a";
+                var numberFormula = string.Format("{0} + {0}", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A + v.A);
+            }
+        }
+
+        private Equation MoreEconomicOperations2(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "3 * a";
+                var numberFormula = string.Format("3 * {0}", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => 3 * v.A);
+            }
+            else
+            {
+                var formula = "a + a + a";
+                var numberFormula = string.Format("{0} + {0} + {0}", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A + v.A + v.A);
+            }
+        }
+
+        private Equation MoreEconomicOperations3(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "4 * a";
+                var numberFormula = string.Format("4 * {0}", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => 4 * v.A);
+            }
+            else
+            {
+                var formula = "a = a + a \na = a + a";
+                var numberFormula = string.Format("a = {0} + {0} \na = {0} + {0}", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => EconomicalOperation1(v.A));
+            }
+        }
+
+        private Equation MoreEconomicOperations4(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "a / 2";
+                var numberFormula = string.Format("{0} / 2", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A / 2);
+            }
+            else
+            {
+                var formula = "a * 0.5";
+                var numberFormula = string.Format("{0} * 0.5", v.A);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A * 0.5);
+            }
+        }
+
+        private Equation MoreEconomicOperations5(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "y = c / x \nz = a + b / x";
+                var numberFormula = string.Format("y = {2} / {3} \nz = {0} + {1} / {3}", v.A, v.B, v.C, v.X);
+
+                return new Equation(formula, numberFormula, v.Count, z => EconomicalOperation2(v.A, v.B, v.C, v.X, EquationType.Before));
+            }
+            else
+            {
+                var formula = "xOdwr = 1.0 / x \ny = c * xOdwr \nz = a + b * xOdwr";
+                var numberFormula = string.Format("xOdwr = 1.0 / {3} \ny = {2} * xOdwr \nz = {0} + {1} * xOdwr", v.A, v.B, v.C, v.X);
+
+                return new Equation(formula, numberFormula, v.Count, z => EconomicalOperation2(v.A, v.B, v.C, v.X, EquationType.After));
+            }
+        }
+
+        private Equation Constants(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "b = 4 * a * atan(1) / 180 + c";
+                var numberFormula = string.Format("b = 4 * {0} * atan(1) / 180 + {1}", v.A, v.C);
+
+                return new Equation(formula, numberFormula, v.Count, z => 4 * v.A * Math.Atan(1) / 180 + v.C);
+            }
+            else
+            {
+                var formula = "b = a * 0.017453292519943295 + c";
+                var numberFormula = string.Format("b = {0} * 0.017453292519943295 + {1}", v.A, v.C);
+
+                return new Equation(formula, numberFormula, v.Count, z => v.A * 0.017453292519943295 + v.C);
+            }
+        }
+
+        private Equation MoreEfficientOperations(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "a = 0 \nfor(int nr = 0; nr < 50; nr++) { \nif(tab[nr] < a) a = tab[nr]; \n}";
+                var numberFormula = "a = 0 \nfor(int nr = 0; nr < 50; nr++) { \nif(tab[nr] < a) a = tab[nr]; \n}";
+
+                return new Equation(formula, numberFormula, v.Count, z => EfficientInstructions(EquationType.Before));
+            }
+            else
+            {
+                var formula = "a = 0; \nfor (int nr = 0; nr < 50; nr++) { \nx = tab[nr]; \nif (x < a) a = x; \n}";
+                var numberFormula = "a = 0; \nfor (int nr = 0; nr < 50; nr++) { \nx = tab[nr]; \nif (x < a) a = x; \n}";
+
+                return new Equation(formula, numberFormula, v.Count, z => EfficientInstructions(EquationType.After));
+            }
+        }
+
+        private Equation MoreEfficientOperations2(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "a = 0 \nfor(int nr = 0; nr < 50; nr++) { \nif(tab[nr] < a) a = tab[nr]; \n}";
+                var numberFormula = "a = 0 \nfor(int nr = 0; nr < 50; nr++) { \nif(tab[nr] < a) a = tab[nr]; \n}";
+
+                return new Equation(formula, numberFormula, v.Count, z => EfficientInstructions(EquationType.Before));
+            }
+            else
+            {
+                var formula = "a = 0; \nfor (int nr = 0; nr < 50; nr++) { \nx = tab[nr]; \nif (x < a) a = x; \n}";
+                var numberFormula = "a = 0; \nfor (int nr = 0; nr < 50; nr++) { \nx = tab[nr]; \nif (x < a) a = x; \n}";
+
+                return new Equation(formula, numberFormula, v.Count, z => EfficientInstructions(EquationType.After));
+            }
+        }
+
+        private Equation EliminationRedundantCalcs(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = "y = x + a / b * c \nz = e + a / b * c";
+                var numberFormula = string.Format("y = {4} + {0} / {1} * {2} \nz = {3} + {0} / {1} * {2}", v.A, v.B, v.C, v.E, v.X);
+
+                return new Equation(formula, numberFormula, v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.Before));
+            }
+            else
+            {
+                var formula = "abc = a / b * c \ny = a + abc \nz = e + abc";
+                var numberFormula = string.Format("abc = {0} / {1} * {2} \ny = {0} + abc \nz = {3} + abc", v.A, v.B, v.C, v.E);
+
+                return new Equation(formula, numberFormula, v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.After));
+            }
+        }
+
+        //todo
+        private Equation MoveUnusedOutOfLoopEquation(ValuesData v, EquationType type)
+        {
+            if (type == EquationType.Before)
+            {
+                var formula = String.Concat("for(int nr1=0; nr1<100; nr1++)", Environment.NewLine,
+                                                                        "for (int nr2 = 1; nr2 < 100; nr2++)", Environment.NewLine,
+                                                                          "t1[nr1][nr2] = t2[nr1][nr2] + a / nr1 - c / d;");
+                
+                var numberFormula = string.Format("for(int nr1=0; nr1<100; nr1++)", Environment.NewLine,
+                                                                "for (int nr2 = 1; nr2 < 100; nr2++)", Environment.NewLine,
+                                                                "t1[nr1][nr2] = t2[nr1][nr2] + {0} / nr1 - {1} / {2};", v.A, v.C, v.D);
+
+                return new Equation(formula, numberFormula, v.Count, z => MoveUnusedOutOfLoop(v.A, v.C, v.D, EquationType.Before));
+            }
+            else
+            {
+                var formula = String.Concat("cd=c/d;", Environment.NewLine,
+                                                             "for(int nr1 = 0; nr1 < 100; nr1++){", Environment.NewLine,
+                                                           "abcd = a / nr1 - cd;", Environment.NewLine,
+                                                         "for(int nr2 = 1; nr2<100; nr2++)", Environment.NewLine,
+                                                       "t1[nr1][nr2] = t2[nr1][nr2] + abcd; }");
+                var numberFormula = string.Format("cd = {1} / {2};", Environment.NewLine,
+                                                       "for(int nr1 = 0; nr1<100; nr1++){", Environment.NewLine,
+                                                                "abcd = {0} / nr1 - cd;", Environment.NewLine,
+                                                   "for(int nr2=1; nr2<100; nr2++)", Environment.NewLine,
+                                                 "t1[nr1][nr2] = t2[nr1][nr2] + abcd; }", v.A, v.B, v.C, v.E);
+
+                return new Equation(formula, numberFormula, v.Count, z => MoveUnusedOutOfLoop(v.A, v.C, v.D, EquationType.After));
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+            
         private double MinimizingNumberOfIndexes(EquationType type)
         {
             int pom;
@@ -509,7 +813,7 @@ namespace PP_Optimalization.Service
     public class MathData
     {
         public Dictionary<string, List<EquationData>> EquationsDictionary { get; set; }
-        public IList<string> Values { get; set; }
+        public ValuesData Values { get; set; }
         public double NetSummaryTime { get; set; }
         public double JsSummaryTime { get; set; }
     }
@@ -531,20 +835,38 @@ namespace PP_Optimalization.Service
     public class Equation
     {
         public string Formula { get; set; }
+        public string ValuesFormula { get; set; }
         public List<string> Values { get; set; }
         public double Result { get; set; }
         public double NetTimeTaken { get; set; }
         public double JSTimeTaken { get; set; }
         public Func<double, double> Func { get; set; }
+        public ValuesData ValuesData { get; set; }
 
         public Equation(string formula, int count, Func<double, float> func)
         {
+            ValuesFormula = formula;
+            Formula = formula;
+            Calculate(count, func);
+        }
+
+        public Equation(string formula, string valuesFormula, int count, Func<double, float> func)
+        {
+            ValuesFormula = valuesFormula;
             Formula = formula;
             Calculate(count, func);
         }
 
         public Equation(string formula, int count, Func<double, double> func)
         {
+            ValuesFormula = formula;
+            Formula = formula;
+            Calculate(count, func);
+        }
+
+        public Equation(string formula, string valuesFormula, int count, Func<double, double> func)
+        {
+            ValuesFormula = valuesFormula;
             Formula = formula;
             Calculate(count, func);
         }
