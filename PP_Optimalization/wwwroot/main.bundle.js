@@ -25,7 +25,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".container {\r\n    max-width: 90% !important;\r\n}\r\n\r\n.overlay {\r\n    height: 100%;\r\n    width: 100%;\r\n    position: fixed;\r\n    z-index: 11111;\r\n    top: 0;\r\n    left: 0;\r\n    background-color: rgb(0,0,0);\r\n    background-color: rgba(0,0,0, 0.6);\r\n    overflow-x: hidden;\r\n    -webkit-transition: 0.5s;\r\n    transition: 0.5s;\r\n    color: #fff;\r\n}\r\n\r\n.overlay-content {\r\n    position: relative;\r\n    top: 25%;\r\n    width: 100%;\r\n    text-align: center;\r\n    margin-top: 30px\r\n}\r\n\r\n.overlay-text {\r\n    width: 25%;\r\n    height: auto;\r\n    margin: 0 auto;\r    position: relative;\r\n}\r\n\r\n.overlay a {\r\n    padding: 8px;\r\n    text-decoration: none;\r\n    font-size: 36px;\r\n    color: #fff;\r\n    display: block;\r\n    -webkit-transition: 0.3s;\r\n    transition: 0.3s\r\n}\r\n\r\n.overlay span.sr-only {\r\n    color: #fff;\r\n}\r\n\r\n.overlay i {\r\n    color: #fff;\r\n}\r\n\r\n.overlay a:hover, .overlay a:focus {\r\n        color: #f1f1f1\r\n    }", ""]);
 
 // exports
 
@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n  <div class=\"jumbotron\">\r\n    <h1 class=\"display-4\">Paradygmaty programowania</h1>\r\n    <hr class=\"my-4\" />\r\n    <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>\r\n  </div>\r\n\r\n  <app-values-form [model]='model'></app-values-form>\r\n\r\n  <div class=\"row\" (onModelChanged)=\"reloadModel($event)\">\r\n    <div class=\"table-responsive\">\r\n      <table class=\"table table-hover\">\r\n        <thead>\r\n          <tr>\r\n            <th colspan=\"2\" scope=\"col\">Równanie</th>\r\n            <th colspan=\"2\" scope=\"col\">.NET</th>\r\n            <th colspan=\"2\" scope=\"col\">JavaScript</th>\r\n          </tr>\r\n        </thead>\r\n        <ng-container *ngIf=\"equationsLoaded\">\r\n          <tbody *ngFor=\"let equationGroup of data.equationsDictionary | keys\">\r\n            <tr>\r\n              <td colspan=\"6\">\r\n                <h3>\r\n                    {{equationGroup.key}}\r\n                </h3>\r\n              </td>\r\n            </tr>\r\n            <tr *ngFor=\"let equation of equationGroup.value\">\r\n              <td>{{equation.before.formula}}</td>\r\n              <td>{{equation.after.formula}}</td>\r\n              <td>{{equation.before.netTimeTaken}}</td>\r\n              <td>{{equation.after.netTimeTaken}}</td>\r\n              <td>{{equation.before.jsTimeTaken}}</td>\r\n              <td>{{equation.after.jsTimeTaken}}</td>\r\n            </tr>\r\n            <!--<tr *ngFor=\"let equation of equationGroup | values\">\r\n              <td>\r\n                <!--<p>\r\n                  {{equation}}\r\n                </p>-->\r\n            <!--<p>{{key.before.formula}}</p>\r\n                <p>{{key.after.formula}}</p>\r\n              </td>\r\n              <td></td>\r\n              <td></td>\r\n              <td></td>\r\n            </tr>-->\r\n          </tbody>\r\n        </ng-container>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div id=\"myNav\" class=\"overlay\" *ngIf=\"loading\">\r\n    <div class=\"overlay-content\">\r\n        <div class=\"overlay-text\">\r\n            <a>\r\n                Liczę ...\r\n                <i class=\"fa fa-spinner fa-spin fa-fw\"></i>\r\n            </a>\r\n            <a>\r\n                .NET ...\r\n                <i class=\"fa fa-check\" aria-hidden=\"true\" *ngIf=\"!isLoading\"></i>\r\n            </a>\r\n            <a>\r\n                JavaScript ...\r\n                <i class=\"fa fa-check\" aria-hidden=\"true\" *ngIf=\"!jsLoading\"></i>\r\n            </a>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"container\">\r\n    <div class=\"jumbotron\">\r\n        <h1 class=\"display-4\">Paradygmaty programowania</h1>\r\n        <hr class=\"my-4\" />\r\n        <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>\r\n    </div>\r\n    <form #valuesForm=\"ngForm\">\r\n        <div class=\"form-row\">\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueA\">A <code>[double]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueA\" name=\"valueA\" [(ngModel)]=\"model.A\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueB\">B <code>[double]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueB\" name=\"valueB\" [(ngModel)]=\"model.B\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueC\">C <code>[double]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueC\" name=\"valueC\" [(ngModel)]=\"model.C\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueD\">D <code>[double]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueD\" name=\"valueD\" [(ngModel)]=\"model.D\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueE\">E <code>[double]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueE\" name=\"valueE\" [(ngModel)]=\"model.E\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueX\">X <code>[double]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueX\" name=\"valueX\" [(ngModel)]=\"model.X\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueW\">W <code>[1:0]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueW\" name=\"valueW\" [(ngModel)]=\"model.W\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-1 col-sm-4\">\r\n                <label for=\"valueN\">N <code>[int]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueN\" name=\"valueN\" [(ngModel)]=\"model.N\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-2 col-sm-4\">\r\n                <label for=\"valueCount\">Count <code>[int]</code></label>\r\n                <input type=\"text\" class=\"form-control\" id=\"valueCount\" name=\"valueCount\" [(ngModel)]=\"model.Count\" required>\r\n            </div>\r\n            <div class=\"form-group col-md-2 col-sm-4\">\r\n                <label>&nbsp;</label>\r\n                <button type=\"submit\" class=\"btn btn-primary form-control\" style=\"padding: .375rem .75rem\" (click)='getExamples($event)'>Przelicz</button>\r\n            </div>\r\n        </div>\r\n    </form>\r\n\r\n\r\n    <div class=\"row\" (onModelChanged)=\"reloadModel($event)\">\r\n        <div class=\"table-responsive\">\r\n            <table class=\"table table-hover\">\r\n                <thead>\r\n                    <tr>\r\n                        <th colspan=\"2\" scope=\"col\">Równanie</th>\r\n                        <th colspan=\"2\" scope=\"col\">.NET</th>\r\n                        <th colspan=\"2\" scope=\"col\">JavaScript</th>\r\n                    </tr>\r\n                    <tr>\r\n                        <th>Przed</th>\r\n                        <th>Po</th>\r\n                        <th>Przed <code>[ms]</code></th>\r\n                        <th>Po <code>[ms]</code></th>\r\n                        <th>Przed <code>[ms]</code></th>\r\n                        <th>Po <code>[ms]</code></th>\r\n                    </tr>\r\n                </thead>\r\n                <ng-container *ngIf=\"equationsLoaded\">\r\n                    <tbody *ngFor=\"let equationGroup of data.equationsDictionary | keys\">\r\n                        <tr>\r\n                            <td colspan=\"6\">\r\n                                <h3>\r\n                                    {{equationGroup.key}}\r\n                                </h3>\r\n                            </td>\r\n                        </tr>\r\n                        <tr *ngFor=\"let equation of equationGroup.value\">\r\n                            <td style=\"white-space: pre-wrap;\">{{equation.before.formula}}</td>\r\n                            <td style=\"white-space: pre-wrap;\">{{equation.after.formula}}</td>\r\n                            <td placement=\"top\" ngbTooltip=\"{{equation.before.netTimeTaken}}\" container=\"body\">{{equation.before.netTimeTakenFixed}}</td>\r\n                            <td placement=\"top\" ngbTooltip=\"{{equation.after.netTimeTaken}}\" container=\"body\">{{equation.after.netTimeTakenFixed}}</td>\r\n                            <td placement=\"top\" ngbTooltip=\"{{equation.before.jsTimeTaken}}\" container=\"body\">{{equation.before.jsTimeTakenFixed}}</td>\r\n                            <td placement=\"top\" ngbTooltip=\"{{equation.after.jsTimeTaken}}\" container=\"body\">{{equation.after.jsTimeTakenFixed}}</td>\r\n                        </tr>\r\n                    </tbody>\r\n                </ng-container>\r\n            </table>\r\n        </div>\r\n        <br />\r\n        <div class=\"table responsive\" *ngIf=\"equationsLoaded\">\r\n            <table class=\"table table-hover\">\r\n                <thead>\r\n                    <tr>\r\n                        <th>\r\n                            Łączny czas\r\n                        </th>\r\n                        <th>\r\n                            .NET\r\n                        </th>\r\n                        <th>\r\n                            JavaScript\r\n                        </th>\r\n                    </tr>\r\n                </thead>\r\n                <tbody>\r\n                    <tr>\r\n                        <td></td>\r\n                        <td>\r\n                            {{data.netSummaryTime}}\r\n                        </td>\r\n                        <td>\r\n                            {{data.jsSummaryTime}}\r\n                        </td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -63,74 +63,131 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent(_httpService) {
+    function AppComponent(_httpService, zone) {
         var _this = this;
         this._httpService = _httpService;
+        this.zone = zone;
         this.equationsLoaded = false;
-        this.model = new __WEBPACK_IMPORTED_MODULE_2__values_data__["a" /* ValuesData */](7, 2, 3, 4, 5, 10, 100, 10);
-        this._aTab = Array.apply(null, Array(100)).map(function () { });
-        this._bTab = Array.apply(null, Array(100)).map(function () { });
-        this._xTab = Array.apply(null, Array(100)).map(function () { });
-        this.__aTab = Array.apply(null, Array(100)).map(function () { });
-        this.__bTab = Array.apply(null, Array(100)).map(function () { });
-        this.__cTab = Array.apply(null, Array(100)).map(function () { });
-        this.__t1Tab = Array.apply(null, Array(100)).map(function () { });
-        this.__t2Tab = Array.apply(null, Array(100)).map(function () { });
-        for (var i = 0; i < 100; i++) {
-            this.__aTab[i] = Array.apply(null, Array(100)).map(function () { });
-            ;
-            this.__bTab[i] = Array.apply(null, Array(100)).map(function () { });
-            ;
-            this.__cTab[i] = Array.apply(null, Array(100)).map(function () { });
-            ;
-            this.__t1Tab[i] = Array.apply(null, Array(100)).map(function () { });
-            ;
-            this.__t2Tab[i] = Array.apply(null, Array(100)).map(function () { });
-            ;
+        this.model = new __WEBPACK_IMPORTED_MODULE_2__values_data__["a" /* ValuesData */](7, 2, 3, 4, 5, 10, 1, 100, 10);
+        this.isLoading = true;
+        this.jsLoading = true;
+        this.loading = true;
+        this._aTab = [];
+        this._bTab = [];
+        this._xTab = [];
+        this.tab = [];
+        //let tab = Array.apply(null, Array(50)).map(function () { });;
+        //_xTab = Array.apply(null, Array(100)).map(function () { });
+        this.__aTab = [];
+        this.__bTab = [];
+        this.__cTab = [];
+        this.__t1Tab = [];
+        this.__t2Tab = [];
+        this.isLoading = true;
+        this.jsLoading = true;
+        this.loading = true;
+        for (var i = 0; i < 50; i++) {
+            this.tab[i] = i;
         }
-        //console.log("tabs:");
-        //console.log(this._aTab);
-        //console.log(this._bTab);
-        //console.log(this._xTab);
-        //console.log(this.__aTab);
-        //console.log(this.__bTab);
-        //console.log(this.__cTab);
-        //console.log(this.__t1Tab);
-        //console.log(this.__t2Tab);
-        //console.log("Model:");
-        //console.log(this.model);
-        this.jsEquations = this.getEquations(this.model);
-        //console.log("JS eqations:");
-        //console.log(this.jsEquations);
+        for (var i = 0; i < 100; i++) {
+            this._aTab[i] = i;
+            this._bTab[i] = i;
+            this._xTab[i] = i;
+            this.__aTab[i] = [];
+            this.__bTab[i] = [];
+            this.__cTab[i] = [];
+            this.__t1Tab[i] = [];
+            this.__t2Tab[i] = [];
+            for (var j = 0; j < 100; j++) {
+                this.__aTab[i][j] = j;
+                this.__bTab[i][j] = j;
+                this.__cTab[i][j] = j;
+                this.__t1Tab[i][j] = j;
+                this.__t2Tab[i][j] = j;
+            }
+        }
         this._httpService.get('/home').subscribe(function (result) {
-            _this.data = result;
-            _this.equationsLoaded = true;
-            //console.log(this.data);
-            _this.remapPositions();
-            //console.log("AFTER");
-            //console.log(this.data);
+            _this.zone.run(function () {
+                _this.data = result;
+                _this.equationsLoaded = true;
+                _this.isLoading = false;
+                var t0 = performance.now();
+                _this.jsEquations = _this.getEquations(_this.model);
+                var t1 = performance.now();
+                _this.data.jsSummaryTime = t1 - t0;
+                _this.remapPositions("");
+                console.log(_this.data);
+                _this.jsLoading = false;
+                setTimeout(function () {
+                    _this.loading = false;
+                }, 200);
+            });
+        }, function (error) {
+            console.log(error);
+            _this.isLoading = false;
+            _this.jsLoading = false;
+            setTimeout(function () {
+                _this.loading = false;
+            }, 300);
         });
-        //console.log("constructor");
     }
     AppComponent.prototype.reloadModel = function (event, data) {
         this.data = data;
-        console.log(data);
     };
     AppComponent.prototype.ngOnInit = function () {
-        //console.log("ngOnInit");
     };
     ;
     AppComponent.prototype.getExamples = function (event) {
+        var _this = this;
+        this.jsLoading = true;
+        this.isLoading = true;
+        this.loading = true;
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json; charset=utf-8');
+        var body = JSON.stringify(this.model);
+        this._httpService.post("/home", body, {
+            headers: headers
+        })
+            .subscribe(function (result) {
+            _this.zone.run(function () {
+                _this.data = result;
+                _this.isLoading = false;
+                var t0 = performance.now();
+                _this.jsEquations = _this.getEquations(_this.model);
+                var t1 = performance.now();
+                _this.data.jsSummaryTime = t1 - t0;
+                _this.remapPositions("");
+                _this.jsLoading = false;
+                setTimeout(function () {
+                    _this.loading = false;
+                }, 300);
+            });
+        }, function (error) {
+            _this.isLoading = false;
+            _this.jsLoading = false;
+            console.log(error);
+            setTimeout(function () {
+                _this.loading = false;
+            }, 300);
+        });
     };
-    ;
-    AppComponent.prototype.remapPositions = function () {
+    AppComponent.prototype.remapPositions = function (msg) {
         for (var i = 0; i < this.jsEquations.length; i++) {
             for (var key in this.data.equationsDictionary) {
                 if (this.data.equationsDictionary.hasOwnProperty(key)) {
                     for (var j = 0; j < this.data.equationsDictionary[key].length; j++) {
                         if (this.jsEquations[i].index == this.data.equationsDictionary[key][j].id) {
-                            this.data.equationsDictionary[key][j].before.jsTimeTaken = this.jsEquations[i].before.timetaken;
-                            this.data.equationsDictionary[key][j].after.jsTimeTaken = this.jsEquations[i].after.timetaken;
+                            this.data.equationsDictionary[key][j].before.jsTimeTaken = this.jsEquations[i].before.timetaken; //.toFixed(5);
+                            this.data.equationsDictionary[key][j].after.jsTimeTaken = this.jsEquations[i].after.timetaken; //.toFixed(5);
+                            var a = this.data.equationsDictionary[key][j].before.netTimeTaken.toFixed(4);
+                            var b = this.data.equationsDictionary[key][j].after.netTimeTaken.toFixed(4);
+                            var c = this.data.equationsDictionary[key][j].before.jsTimeTaken.toFixed(4);
+                            var d = this.data.equationsDictionary[key][j].after.jsTimeTaken.toFixed(4);
+                            this.data.equationsDictionary[key][j].before.netTimeTakenFixed = a;
+                            this.data.equationsDictionary[key][j].after.netTimeTakenFixed = b;
+                            this.data.equationsDictionary[key][j].before.jsTimeTakenFixed = c;
+                            this.data.equationsDictionary[key][j].after.jsTimeTakenFixed = d;
+                            this.data.equationsDictionary[key][j].before.formula.replace(new RegExp('\n', 'g'), "<br />");
+                            this.data.equationsDictionary[key][j].after.formula.replace(new RegExp('\n', 'g'), "<br />");
                         }
                     }
                 }
@@ -261,7 +318,7 @@ var AppComponent = /** @class */ (function () {
         else if (type == "after") {
             var t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
-                result = model.X * model.X - model.X * model.A;
+                result = (model.X * model.X - model.X * model.A) / model.B;
             }
             var t1 = performance.now();
             timetaken = t1 - t0;
@@ -309,7 +366,7 @@ var AppComponent = /** @class */ (function () {
             var t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
                 for (var j = 1; j < array.length; j++) {
-                    result += array[i] * model.X * model.N;
+                    result += array[j] * model.X * model.N;
                 }
             }
             var t1 = performance.now();
@@ -319,7 +376,7 @@ var AppComponent = /** @class */ (function () {
             var t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
                 for (var j = 1; j < array.length; j++) {
-                    result += array[i] * model.X;
+                    result += array[j] * model.X;
                 }
                 result *= model.N;
             }
@@ -562,16 +619,14 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.efficientInstructions2 = function (model, type) {
         var a;
         var x;
-        var tab = Array.apply(null, Array(50)).map(function () { });
-        ;
         var result, timetaken;
         if (type == "before") {
             var t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
                 a = 0;
                 for (var nr = 0; nr < 50; nr++) {
-                    if (tab[nr] < a)
-                        a = tab[nr];
+                    if (this.tab[nr] < a)
+                        a = this.tab[nr];
                 }
             }
             var t1 = performance.now();
@@ -582,7 +637,7 @@ var AppComponent = /** @class */ (function () {
             for (var i = 0; i < model.Count; i++) {
                 a = 0;
                 for (var nr_2 = 0; nr_2 < 50; nr_2++) {
-                    x = tab[nr_2];
+                    x = this.tab[nr_2];
                     a = x < a ? x : a;
                 }
             }
@@ -748,9 +803,7 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.moveTestingOutOfLoop = function (model, type) {
         var result, timetaken;
-        var rand = Math.random();
-        var num = rand * 100;
-        var W = num > 30 ? true : false;
+        var W = model.W == 1 ? true : false;
         if (type == "before") {
             var t0 = performance.now();
             for (var i = 0; i < model.Count; i++) {
@@ -841,7 +894,7 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__("../../../../../src/app/app.component.html"),
             styles: [__webpack_require__("../../../../../src/app/app.component.css")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */], __WEBPACK_IMPORTED_MODULE_0__angular_core__["K" /* NgZone */]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -861,9 +914,9 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("../../../http/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__values_form_values_form_component__ = __webpack_require__("../../../../../src/app/values-form/values-form.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__keys_pipe__ = __webpack_require__("../../../../../src/app/keys.pipe.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__values_pipe__ = __webpack_require__("../../../../../src/app/values.pipe.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__keys_pipe__ = __webpack_require__("../../../../../src/app/keys.pipe.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__values_pipe__ = __webpack_require__("../../../../../src/app/values.pipe.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ng_bootstrap_ng_bootstrap__ = __webpack_require__("../../../../@ng-bootstrap/ng-bootstrap/index.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -883,18 +936,18 @@ var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["E" /* NgModule */])({
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["G" /* NgModule */])({
             declarations: [
                 __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */],
-                __WEBPACK_IMPORTED_MODULE_6__values_form_values_form_component__["a" /* ValuesFormComponent */],
-                __WEBPACK_IMPORTED_MODULE_7__keys_pipe__["a" /* KeysPipe */],
-                __WEBPACK_IMPORTED_MODULE_8__values_pipe__["a" /* ValuesPipe */]
+                __WEBPACK_IMPORTED_MODULE_6__keys_pipe__["a" /* KeysPipe */],
+                __WEBPACK_IMPORTED_MODULE_7__values_pipe__["a" /* ValuesPipe */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */],
-                __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */]
+                __WEBPACK_IMPORTED_MODULE_4__angular_common_http__["b" /* HttpClientModule */],
+                __WEBPACK_IMPORTED_MODULE_8__ng_bootstrap_ng_bootstrap__["a" /* NgbModule */].forRoot()
             ],
             providers: [],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
@@ -931,7 +984,7 @@ var KeysPipe = /** @class */ (function () {
         return keys;
     };
     KeysPipe = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Pipe */])({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Q" /* Pipe */])({
             name: 'keys'
         })
     ], KeysPipe);
@@ -948,107 +1001,18 @@ var KeysPipe = /** @class */ (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValuesData; });
 var ValuesData = /** @class */ (function () {
-    function ValuesData(A, B, C, D, E, X, Count, N) {
+    function ValuesData(A, B, C, D, E, X, W, Count, N) {
         this.A = A;
         this.B = B;
         this.C = C;
         this.D = D;
         this.E = E;
         this.X = X;
+        this.W = W;
         this.Count = Count;
         this.N = N;
     }
     return ValuesData;
-}());
-
-
-
-/***/ }),
-
-/***/ "../../../../../src/app/values-form/values-form.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/values-form/values-form.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<form #valuesForm=\"ngForm\">\r\n  <div class=\"form-row\">\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueA\">A</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueA\" name=\"valueA\" [(ngModel)]=\"model.A\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueB\">B</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueB\" name=\"valueB\" [(ngModel)]=\"model.B\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueC\">C</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueC\" name=\"valueC\" [(ngModel)]=\"model.C\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueD\">D</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueD\" name=\"valueD\" [(ngModel)]=\"model.D\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-1 col-sm-4\">\r\n      <label for=\"valueE\">E</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueE\" name=\"valueE\" [(ngModel)]=\"model.E\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-2 col-sm-4\">\r\n      <label for=\"valueX\">X</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueX\" name=\"valueX\" [(ngModel)]=\"model.X\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-2 col-sm-4\">\r\n      <label for=\"valueN\">N</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueN\" name=\"valueN\" [(ngModel)]=\"model.N\" required>\r\n    </div>\r\n\r\n    <div class=\"form-group col-md-3 col-sm-4\">\r\n      <label for=\"valueCount\">Count</label>\r\n      <input type=\"text\" class=\"form-control\" id=\"valueCount\" name=\"valueCount\" [(ngModel)]=\"model.Count\" required>\r\n    </div>\r\n  </div>\r\n\r\n  <button type=\"submit\" class=\"btn btn-primary\" (click)='getExamples($event)'>Przelicz</button>\r\n</form>\r\n\r\n\r\n{{getDiagnostic}}\r\n"
-
-/***/ }),
-
-/***/ "../../../../../src/app/values-form/values-form.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValuesFormComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var ValuesFormComponent = /** @class */ (function () {
-    function ValuesFormComponent(_httpService) {
-        this._httpService = _httpService;
-        this.onModelChanged = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* EventEmitter */]();
-    }
-    ValuesFormComponent.prototype.ngOnInit = function () {
-    };
-    ;
-    ValuesFormComponent.prototype.getExamples = function (event) {
-        var _this = this;
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["c" /* HttpHeaders */]().set('Content-Type', 'application/json; charset=utf-8');
-        var body = JSON.stringify(this.model);
-        this._httpService.post("/home", body, {
-            headers: headers
-        })
-            .subscribe(function (result) {
-            _this.onModelChanged.emit(result);
-            _this.data = result;
-            console.log(result);
-        }, function (error) {
-            console.log(error);
-        });
-    };
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["K" /* Output */])(),
-        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* EventEmitter */])
-    ], ValuesFormComponent.prototype, "onModelChanged", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Input */])(),
-        __metadata("design:type", Object)
-    ], ValuesFormComponent.prototype, "model", void 0);
-    ValuesFormComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'app-values-form',
-            template: __webpack_require__("../../../../../src/app/values-form/values-form.component.html"),
-            styles: [__webpack_require__("../../../../../src/app/values-form/values-form.component.css")]
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_common_http__["a" /* HttpClient */]])
-    ], ValuesFormComponent);
-    return ValuesFormComponent;
 }());
 
 
@@ -1081,7 +1045,7 @@ var ValuesPipe = /** @class */ (function () {
         return keys;
     };
     ValuesPipe = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Pipe */])({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Q" /* Pipe */])({
             name: 'values'
         })
     ], ValuesPipe);
@@ -1122,7 +1086,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_7" /* enableProdMode */])();
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_10" /* enableProdMode */])();
 }
 Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */])
     .catch(function (err) { return console.log(err); });

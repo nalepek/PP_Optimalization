@@ -6,6 +6,7 @@ export class ValuesData {
         public D: number,
         public E: number,
         public X: number,
+        public W: number,
         public Count: number,
         public N: number
     ){}

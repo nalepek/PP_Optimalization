@@ -16,6 +16,7 @@ namespace PP_Optimalization.Service
         private int[] _bTab = new int[100];
         private int[] _xTab = new int[100];
 
+        private int[] tab = new int[50];
 
         private int[][] __aTab = new int[100][];
         private int[][] __bTab = new int[100][];
@@ -24,20 +25,44 @@ namespace PP_Optimalization.Service
         private int[][] __t1Tab = new int[100][];
         private int[][] __t2Tab = new int[100][];
 
+        private int _a;
+        private int _c;
+        private int _d;
+
         public MathService()
         {
+            for (var i = 0; i < 50; i++){
+                tab[i] = i;
+            }
             for (var i = 0; i < 100; i++)
             {
+                _aTab[i] = i;
+                _bTab[i] = i;
+                _xTab[i] = i;
+
                 __aTab[i] = new int[100];
                 __bTab[i] = new int[100];
                 __cTab[i] = new int[100];
                 __t1Tab[i] = new int[100];
                 __t2Tab[i] = new int[100];
+
+                for (var j = 0; j < 100; j++)
+                {
+                    __aTab[i][j] = j;
+                    __bTab[i][j] = j;
+                    __cTab[i][j] = j;
+                    __t1Tab[i][j] = j;
+                    __t2Tab[i][j] = j;
+                }
             }
         }
 
         public MathData GetExamples(ValuesData valuesData)
         {
+            _a = Convert.ToInt32(valuesData.A);
+            _c = Convert.ToInt32(valuesData.C);
+            _d = Convert.ToInt32(valuesData.D);
+
             return Factory(valuesData);
         }
 
@@ -70,31 +95,31 @@ namespace PP_Optimalization.Service
             int i = 0;
             var list = new List<EquationData>
             {
-                new EquationData(i++, "Optymalizacja lokalna")
+                new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
                     Before = new Equation("Math.Pow(x, 2) / b - a * x / b", v.Count, z => Math.Pow(v.X, 2) / v.B - v.A * v.X / v.B),
                     After = new Equation("(x * x - x * a) / b", v.Count, z => (v.X * v.X - v.X * v.A) / v.B)
                 },
 
-                new EquationData(i++, "Optymalizacja lokalna")
+                new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
                     Before = new Equation("Math.Pow(x, 2) / b - a * x / b", v.Count, z => Math.Pow(v.X, 2) / v.B - v.A * v.X / v.B),
                     After = new Equation("x * (x - a) / b", v.Count, z => v.X * (v.X - v.A) / v.B)
                 },
 
-                new EquationData(i++, "Optymalizacja lokalna")
+                new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
                     Before = new Equation("a * b * c + a * b * d + a * e", v.Count, z => v.A * v.B * v.C + v.A * v.B * v.D + v.A * v.E),
                     After = new Equation("a * (b * (c + d) + e)", v.Count, z => v.A * (v.B * (v.C + v.D) + v.E))
                 },
 
-                new EquationData(i++, "Optymalizacja lokalna")
+                new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
                     Before = new Equation("a[n] * x * n + a[n - 1] * x *(n - 1)+ ... + a[1] * x + a[0]", v.Count, z => Series(v.N, v.X, EquationType.Before)),
                     After = new Equation("...((a[n] * x + a[n - 1]) * x + a[n - 2] * x + ... + a[1]) * x + a[0]", v.Count, z => Series(v.N, v.X, EquationType.After))
                 },
 
-                new EquationData(i++, "Optymalizacja lokalna")
+                new EquationData(i++, "Minimalizacja liczby operacji przy wartościowaniu wyrażeń arytmetycznych")
                 {
                     Before = new Equation("-a + b", v.Count, z => -v.A + v.B),
                     After = new Equation("b - a", v.Count, z => v.B - v.A)
@@ -102,29 +127,29 @@ namespace PP_Optimalization.Service
 
                 new EquationData(i++, "Likwidacja zmiennych z jednokrotnym odwołaniem")
                 {
-                    Before = new Equation(String.Concat("d = a + b * c ", Environment.NewLine, "y = d + e") , v.Count, z => ReductionOfVarWithSingleRef(v.A, v.B, v.C, v.E)),
+                    Before = new Equation("d = a + b * c \ny = d + e" , v.Count, z => ReductionOfVarWithSingleRef(v.A, v.B, v.C, v.E)),
                     After = new Equation("y = a + b * c + e", v.Count, z => v.A + v.B * v.C + v.E)
                 },
 
-                new EquationData(i++, "Stosowanie oszczedniejszych operacji")
+                new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
                     Before = new Equation("2 * a" , v.Count, z => 2 * v.A),
                     After = new Equation("a + a", v.Count, z => v.A + v.A)
                 },
 
-                new EquationData(i++, "Stosowanie oszczedniejszych operacji")
+                new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
                     Before = new Equation("3 * a" , v.Count, z => 3 * v.A),
                     After = new Equation("a + a + a", v.Count, z => v.A + v.A + v.A)
                 },
 
-                new EquationData(i++, "Stosowanie oszczedniejszych operacji")
+                new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
                     Before = new Equation("4 * a" , v.Count, z => 4 * v.A),
                     After = new Equation(String.Concat("a = a + a ", Environment.NewLine, "a = a + a"), v.Count, z => EconomicalOperation1(v.A))
                 },
 
-                new EquationData(i++, "Stosowanie oszczedniejszych operacji")
+                new EquationData(i++, "Stosowanie oszczędniejszych operacji")
                 {
                     Before = new Equation("a / 2" , v.Count, z => v.A / 2),
                     After = new Equation("a * 0.5", v.Count, z => v.A * 0.5)
@@ -154,7 +179,7 @@ namespace PP_Optimalization.Service
                     After = new Equation(String.Concat("a = 0;", Environment.NewLine, "for (int nr = 0; nr < 50; nr++) { ", Environment.NewLine, "x = tab[nr];", Environment.NewLine, "a = x < a ? x : a;", Environment.NewLine, "}"), v.Count, z => EfficientInstructions(EquationType.AfterAnother))
                 },
 
-                new EquationData(i++, "Eliminacja obliczen redundantnych")
+                new EquationData(i++, "Eliminacja obliczeń redundantnych")
                 {
                     Before = new Equation(String.Concat("y = x + a / b * c", Environment.NewLine, "z = e + a / b * c") , v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.Before)),
                     After = new Equation(String.Concat("abc = a / b * c", Environment.NewLine, "y = a + abc", Environment.NewLine, "z = e + abc"), v.Count, z => EliminationRedundantCalculations(v.A, v.B, v.C, v.E, v.X, EquationType.After))
@@ -166,7 +191,7 @@ namespace PP_Optimalization.Service
                     After = new Equation("y = i1 + i2 + i3 + i4 + f1 + f2 + f3 + f4", v.Count, z => TypeConversion(EquationType.After))
                 },
 
-                new EquationData(i++, "Optymalizacja globalna: Rozwijanie petli")
+                new EquationData(i++, "Optymalizacja globalna: Rozwijanie pętli")
                 {
                     Before = new Equation(String.Concat("for (int nr = 0; nr < 10; nr++) ", Environment.NewLine, "tab1[nr] = 0;") , v.Count, z => ExpandLoop(EquationType.Before)),
                     After = new Equation(String.Concat("tab[0] = 0", Environment.NewLine, "... tab[10] = 10"), v.Count, z => ExpandLoop(EquationType.After))
@@ -200,17 +225,17 @@ namespace PP_Optimalization.Service
                     Before = new Equation(String.Concat("for (int nr = 0; nr < 100; nr++)", Environment.NewLine,
                                                             "if (W) x[nr] = a[nr] + b[nr];", Environment.NewLine,
                                                             "else x[nr] = a[nr] - b[nr];", Environment.NewLine)
-                                                            , v.Count, z => MoveTestingOutOfLoop(EquationType.Before)),
+                                                            , v.Count, z => MoveTestingOutOfLoop(v.W, EquationType.Before)),
                     After = new Equation(String.Concat("if (W)", Environment.NewLine,
                                                        "for (int nr = 0; nr < 100; nr++)", Environment.NewLine,
                                                        "x[nr] = a[nr] + b[nr];", Environment.NewLine,
                                                        "else", Environment.NewLine,
                                                        "for (int nr = 0; nr < 100; nr++)", Environment.NewLine,
                                                        "x[nr] = a[nr] - b[nr];")
-                                         , v.Count, z => MoveTestingOutOfLoop(EquationType.After))
+                                         , v.Count, z => MoveTestingOutOfLoop(v.W, EquationType.After))
                 },
 
-                new EquationData(i++, "Minimalizacja liczby indeksów w odwołaniach do elementów tablice")
+                new EquationData(i++, "Minimalizacja liczby indeksów w odwołaniach do elementów tablic")
                 {
                     Before = new Equation(String.Concat("for (int nr1 = 0; nr1 < 100; nr1++)", Environment.NewLine,
                                                         "for (int nr2 = 1; nr2 < 100; nr2++){", Environment.NewLine,
@@ -258,11 +283,9 @@ namespace PP_Optimalization.Service
             return 0;
         }
 
-        private double MoveTestingOutOfLoop(EquationType type)
+        private double MoveTestingOutOfLoop(int w, EquationType type)
         {
-            var rand = new Random();
-            var num = rand.Next() * 100;
-            var W = num > 30 ? true : false;
+            var W = w == 1 ? true : false;
 
             if (type == EquationType.Before)
             {
@@ -284,10 +307,6 @@ namespace PP_Optimalization.Service
 
         private double MoveUnusedOutOfLoop(double a, double c, double d, EquationType type)
         {
-            int _a = Convert.ToInt32(a);
-            int _c = Convert.ToInt32(c);
-            int _d = Convert.ToInt32(d);
-
             double cd;
             double abcd;
 
@@ -396,7 +415,6 @@ namespace PP_Optimalization.Service
         {
             int a;
             int x;
-            int[] tab = new int[50];
             if (type == EquationType.Before)
             {
                 a = 0;
@@ -492,6 +510,8 @@ namespace PP_Optimalization.Service
     {
         public Dictionary<string, List<EquationData>> EquationsDictionary { get; set; }
         public IList<string> Values { get; set; }
+        public double NetSummaryTime { get; set; }
+        public double JsSummaryTime { get; set; }
     }
 
     public class EquationData
@@ -513,8 +533,8 @@ namespace PP_Optimalization.Service
         public string Formula { get; set; }
         public List<string> Values { get; set; }
         public double Result { get; set; }
-        public long NetTimeTaken { get; set; }
-        public long JSTimeTaken { get; set; }
+        public double NetTimeTaken { get; set; }
+        public double JSTimeTaken { get; set; }
         public Func<double, double> Func { get; set; }
 
         public Equation(string formula, int count, Func<double, float> func)
@@ -537,7 +557,7 @@ namespace PP_Optimalization.Service
                 Result = func(count);
             }
             watch.Stop();
-            NetTimeTaken = watch.ElapsedMilliseconds;
+            NetTimeTaken = watch.Elapsed.TotalMilliseconds;
         }
 
         private void Calculate(int count, Func<double, float> func)
@@ -548,7 +568,7 @@ namespace PP_Optimalization.Service
                 Result = func(count);
             }
             watch.Stop();
-            NetTimeTaken = watch.ElapsedMilliseconds;
+            NetTimeTaken = watch.Elapsed.TotalMilliseconds;
         }
     }
 
@@ -560,6 +580,7 @@ namespace PP_Optimalization.Service
         public double D { get; set; }
         public double E { get; set; }
         public double X { get; set; }
+        public int W { get; set; }
         public int N { get; set; }
         public int Count { get; set; }
     }

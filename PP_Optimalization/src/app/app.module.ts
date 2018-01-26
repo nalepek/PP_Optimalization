@@ -5,14 +5,14 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { ValuesFormComponent } from './values-form/values-form.component';
 import { KeysPipe } from './keys.pipe';
 import { ValuesPipe } from './values.pipe';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    ValuesFormComponent,
     KeysPipe,
     ValuesPipe
   ],
@@ -20,7 +20,8 @@ import { ValuesPipe } from './values.pipe';
       BrowserModule,
       FormsModule,
       HttpModule,
-      HttpClientModule
+      HttpClientModule,
+      NgbModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

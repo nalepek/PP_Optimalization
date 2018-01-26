@@ -1,54 +1,140 @@
-<div class="container">
-  <div class="jumbotron">
-    <h1 class="display-4">Paradygmaty programowania</h1>
-    <hr class="my-4" />
-    <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>
-  </div>
-
-  <app-values-form [model]='model'></app-values-form>
-
-  <div class="row" (onModelChanged)="reloadModel($event)">
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th colspan="2" scope="col">Równanie</th>
-            <th colspan="2" scope="col">.NET</th>
-            <th colspan="2" scope="col">JavaScript</th>
-          </tr>
-        </thead>
-        <ng-container *ngIf="equationsLoaded">
-          <tbody *ngFor="let equationGroup of data.equationsDictionary | keys">
-            <tr>
-              <td colspan="6">
-                <h3>
-                    {{equationGroup.key}}
-                </h3>
-              </td>
-            </tr>
-            <tr *ngFor="let equation of equationGroup.value">
-              <td>{{equation.before.formula}}</td>
-              <td>{{equation.after.formula}}</td>
-              <td>{{equation.before.netTimeTaken}}</td>
-              <td>{{equation.after.netTimeTaken}}</td>
-              <td>{{equation.before.jsTimeTaken}}</td>
-              <td>{{equation.after.jsTimeTaken}}</td>
-            </tr>
-            <!--<tr *ngFor="let equation of equationGroup | values">
-              <td>
-                <!--<p>
-                  {{equation}}
-                </p>-->
-            <!--<p>{{key.before.formula}}</p>
-                <p>{{key.after.formula}}</p>
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>-->
-          </tbody>
-        </ng-container>
-      </table>
+<div id="myNav" class="overlay" *ngIf="loading">
+    <div class="overlay-content">
+        <div class="overlay-text">
+            <a>
+                Liczę ...
+                <i class="fa fa-spinner fa-spin fa-fw"></i>
+            </a>
+            <a>
+                .NET ...
+                <i class="fa fa-check" aria-hidden="true" *ngIf="!isLoading"></i>
+            </a>
+            <a>
+                JavaScript ...
+                <i class="fa fa-check" aria-hidden="true" *ngIf="!jsLoading"></i>
+            </a>
+        </div>
     </div>
-  </div>
+</div>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Paradygmaty programowania</h1>
+        <hr class="my-4" />
+        <p>Optymalizacja kodu źródłowego – porównanie czasów działania</p>
+    </div>
+    <form #valuesForm="ngForm">
+        <div class="form-row">
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueA">A <code>[double]</code></label>
+                <input type="text" class="form-control" id="valueA" name="valueA" [(ngModel)]="model.A" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueB">B <code>[double]</code></label>
+                <input type="text" class="form-control" id="valueB" name="valueB" [(ngModel)]="model.B" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueC">C <code>[double]</code></label>
+                <input type="text" class="form-control" id="valueC" name="valueC" [(ngModel)]="model.C" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueD">D <code>[double]</code></label>
+                <input type="text" class="form-control" id="valueD" name="valueD" [(ngModel)]="model.D" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueE">E <code>[double]</code></label>
+                <input type="text" class="form-control" id="valueE" name="valueE" [(ngModel)]="model.E" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueX">X <code>[double]</code></label>
+                <input type="text" class="form-control" id="valueX" name="valueX" [(ngModel)]="model.X" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueW">W <code>[1:0]</code></label>
+                <input type="text" class="form-control" id="valueW" name="valueW" [(ngModel)]="model.W" required>
+            </div>
+            <div class="form-group col-md-1 col-sm-4">
+                <label for="valueN">N <code>[int]</code></label>
+                <input type="text" class="form-control" id="valueN" name="valueN" [(ngModel)]="model.N" required>
+            </div>
+            <div class="form-group col-md-2 col-sm-4">
+                <label for="valueCount">Count <code>[int]</code></label>
+                <input type="text" class="form-control" id="valueCount" name="valueCount" [(ngModel)]="model.Count" required>
+            </div>
+            <div class="form-group col-md-2 col-sm-4">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary form-control" style="padding: .375rem .75rem" (click)='getExamples($event)'>Przelicz</button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="row" (onModelChanged)="reloadModel($event)">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="2" scope="col">Równanie</th>
+                        <th colspan="2" scope="col">.NET</th>
+                        <th colspan="2" scope="col">JavaScript</th>
+                    </tr>
+                    <tr>
+                        <th>Przed</th>
+                        <th>Po</th>
+                        <th>Przed <code>[ms]</code></th>
+                        <th>Po <code>[ms]</code></th>
+                        <th>Przed <code>[ms]</code></th>
+                        <th>Po <code>[ms]</code></th>
+                    </tr>
+                </thead>
+                <ng-container *ngIf="equationsLoaded">
+                    <tbody *ngFor="let equationGroup of data.equationsDictionary | keys">
+                        <tr>
+                            <td colspan="6">
+                                <h3>
+                                    {{equationGroup.key}}
+                                </h3>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let equation of equationGroup.value">
+                            <td style="white-space: pre-wrap;">{{equation.before.formula}}</td>
+                            <td style="white-space: pre-wrap;">{{equation.after.formula}}</td>
+                            <td placement="top" ngbTooltip="{{equation.before.netTimeTaken}}" container="body">{{equation.before.netTimeTakenFixed}}</td>
+                            <td placement="top" ngbTooltip="{{equation.after.netTimeTaken}}" container="body">{{equation.after.netTimeTakenFixed}}</td>
+                            <td placement="top" ngbTooltip="{{equation.before.jsTimeTaken}}" container="body">{{equation.before.jsTimeTakenFixed}}</td>
+                            <td placement="top" ngbTooltip="{{equation.after.jsTimeTaken}}" container="body">{{equation.after.jsTimeTakenFixed}}</td>
+                        </tr>
+                    </tbody>
+                </ng-container>
+            </table>
+        </div>
+        <br />
+        <div class="table responsive" *ngIf="equationsLoaded">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            Łączny czas
+                        </th>
+                        <th>
+                            .NET
+                        </th>
+                        <th>
+                            JavaScript
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            {{data.netSummaryTime}}
+                        </td>
+                        <td>
+                            {{data.jsSummaryTime}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
